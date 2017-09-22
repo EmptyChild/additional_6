@@ -1,68 +1,47 @@
 module.exports = function zeros(expression) {
-    let ExpArr = expression.split("*");
-    let factArr = [];
-    let doubleFactArr = [];
-    for (let exp of ExpArr) {
-        if (exp.includes('!!')) {
-            doubleFactArr.push(exp.slice(0, -2));
-        } else {
-            factArr.push(exp.slice(0, -1));
-        }
-    }
+    let factArr = expression.split("*");
     let fivesCounter = 0;
-    let fivesChecked = false;
     let twosCounter = 0;
     let result = [0, 0];
+    let factType;
+    if (factArr[0].includes('!!')) {
+        factArr[0] = factArr[0].slice(0, -2);
+        factType = 2;
+    } else {
+        factArr[0] = factArr[0].slice(0, -1);
+        factType = 1;
+    }
     for (let i = 0; i < factArr.length;) {
-        if (!fivesChecked) {
-            if (factArr[i] % 5 == 0 && factArr[i] > 0) {
+        if (factArr[i] > 0) {
+            if (factArr[i] % 5 == 0) {
                 factArr[i] /= 5;
                 fivesCounter++;
                 continue;
             }
-            factArr[i] *= Math.pow(5, fivesCounter);
-            result[0] += fivesCounter;
-            fivesCounter = 0;
-            fivesChecked = true;
-        }
-        if (factArr[i] % 2 == 0 && factArr[i] > 0) {
-            factArr[i] /= 2;
-            twosCounter++;
-            continue;
+            if (factArr[i] % 2 == 0) {
+                factArr[i] /= 2;
+                twosCounter++;
+                continue;
+            }
         }
         factArr[i] *= Math.pow(2, twosCounter);
         result[1] += twosCounter;
         twosCounter = 0;
-        fivesChecked = false;
-        factArr[i]--;
+        factArr[i] *= Math.pow(5, fivesCounter);
+        result[0] += fivesCounter;
+        fivesCounter = 0;
+        factArr[i] -= factType;
         if (factArr[i] < 2) {
             i++;
-        }
-    }
-    for (let i = 0; i < doubleFactArr.length;) {
-        if (!fivesChecked) {
-            if (doubleFactArr[i] % 5 == 0 && doubleFactArr[i] > 0) {
-                doubleFactArr[i] /= 5;
-                fivesCounter++;
-                continue;
+            if (i < factArr.length) {
+                if (factArr[i].includes('!!')) {
+                    factArr[i] = factArr[i].slice(0, -2);
+                    factType = 2;
+                } else {
+                    factArr[i] = factArr[i].slice(0, -1);
+                    factType = 1;
+                }
             }
-            doubleFactArr[i] *= Math.pow(5, fivesCounter);
-            result[0] += fivesCounter;
-            fivesCounter = 0;
-            fivesChecked = true;
-        }
-        if (doubleFactArr[i] % 2 == 0 && doubleFactArr[i] > 0) {
-            doubleFactArr[i] /= 2;
-            twosCounter++;
-            continue;
-        }
-        doubleFactArr[i] *= Math.pow(2, twosCounter);
-        result[1] += twosCounter;
-        twosCounter = 0;
-        fivesChecked = false;
-        doubleFactArr[i] -= 2;
-        if (doubleFactArr[i] < 2) {
-            i++;
         }
     }
     return Math.min(...result);
