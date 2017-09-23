@@ -4,7 +4,7 @@ module.exports = function zeros(expression) {
     let twosCounter = 0;
     let result = [0, 0];
     let factType;
-    if (factArr[0].includes('!!')) {
+    if (factArr[0].endsWith('!!')) {
         factArr[0] = factArr[0].slice(0, -2);
         factType = 2;
     } else {
@@ -12,17 +12,15 @@ module.exports = function zeros(expression) {
         factType = 1;
     }
     for (let i = 0; i < factArr.length;) {
-        if (factArr[i] > 0) {
-            if (factArr[i] % 5 == 0) {
-                factArr[i] /= 5;
-                fivesCounter++;
-                continue;
-            }
-            if (factArr[i] % 2 == 0) {
-                factArr[i] /= 2;
-                twosCounter++;
-                continue;
-            }
+        if (factArr[i] % 5 == 0) {
+            factArr[i] /= 5;
+            fivesCounter++;
+            continue;
+        }
+        if (factArr[i] % 2 == 0) {
+            factArr[i] /= 2;
+            twosCounter++;
+            continue;
         }
         factArr[i] *= Math.pow(2, twosCounter);
         result[1] += twosCounter;
@@ -34,7 +32,7 @@ module.exports = function zeros(expression) {
         if (factArr[i] < 2) {
             i++;
             if (i < factArr.length) {
-                if (factArr[i].includes('!!')) {
+                if (factArr[i].endsWith('!!')) {
                     factArr[i] = factArr[i].slice(0, -2);
                     factType = 2;
                 } else {
